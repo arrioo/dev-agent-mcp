@@ -1,0 +1,9 @@
+projects:
+  - name: cash-advance
+    path: D:\Development\cash-advance
+
+  - name: esubmission
+    path: D:\Development\esubmission
+
+  - name: ptpintar
+    path: D:\Development\ptpintar

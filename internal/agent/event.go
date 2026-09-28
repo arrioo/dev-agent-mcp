@@ -1,0 +1,11 @@
+package agent
+
+import "time"
+
+// Event represents a system or agent event
+type Event struct {
+	ID        string                 `json:"id"`
+	Type      string                 `json:"type"`
+	Timestamp time.Time              `json:"timestamp"`
+	Payload   map[string]interface{} `json:"payload"`
+}
