@@ -50,6 +50,40 @@ func startWebDashboard(monitor *agent.Monitor) {
 	mux := http.NewServeMux()
 
 	// API Handlers for the Frontend
+	mux.HandleFunc("/api/chat", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
+		var req struct {
+			Message string `json:"message"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "Invalid body", http.StatusBadRequest)
+			return
+		}
+
+		// Record the user's message as an event
+		monitor.RecordEvent("chat_message", map[string]interface{}{
+			"user": "dashboard_user",
+			"text": req.Message,
+		})
+
+		// Simple command processing (simulating agent intelligence)
+		reply := "I received your message: " + req.Message
+		if req.Message == "ping" {
+			reply = "pong! My current status is: " + monitor.GetStatus()
+		} else if req.Message == "status" {
+			reply = "Agent is " + monitor.GetStatus()
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]string{
+			"reply": reply,
+		})
+	})
+
 	mux.HandleFunc("/api/status", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]string{

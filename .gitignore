@@ -1,3 +1,45 @@
+# =========================
+# Environment / Secrets
+# =========================
 .env
 .env.*
 !.env.example
+
+# Compiled binaries
+dashboard.exe
+dev-agent-mcp.exe
+
+# =========================
+# Build Output
+# =========================
+/bin/
+/dist/
+
+# =========================
+# Runtime / Temporary Files
+# =========================
+/storage/temp/*
+!/storage/temp/.gitkeep
+
+# =========================
+# Logs
+# =========================
+/storage/logs/*
+!/storage/logs/.gitkeep
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE
+# =========================
+.idea/
+.vscode/
+
+# =========================
+# Go
+# =========================
+*.test
