@@ -3,298 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agent MCP Dashboard</title>
+    <title>Agent Dashboard</title>
     <meta name="description" content="Dashboard for Dev Agent MCP">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #0f172a;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --glass-bg: rgba(30, 41, 59, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --accent-glow: rgba(99, 102, 241, 0.5);
-            --success: #10b981;
-            --primary: #8b5cf6;
-        }
-
         body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-color);
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
-                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
-            background-attachment: fixed;
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            font-family: 'Inter', sans-serif;
+            background-color: #F7F7F5;
+            color: #111111;
         }
 
-        header {
-            width: 100%;
-            padding: 2rem 0;
-            text-align: center;
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        h1 {
-            font-weight: 800;
-            font-size: 2.5rem;
-            margin: 0;
-            background: linear-gradient(to right, #a855f7, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0px 4px 15px rgba(236, 72, 153, 0.3);
-        }
-
-        .container {
-            width: 95%;
-            max-width: 1200px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .left-col {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .glass-panel:hover {
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        h2 {
-            margin-top: 0;
-            font-weight: 600;
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            font-weight: 600;
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            animation: pulse 2s infinite;
-        }
-
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            background-color: var(--success);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--success);
-        }
-
-        /* Chat Styles */
-        .chat-box {
-            flex-grow: 1;
-            min-height: 250px;
-            max-height: 350px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding-right: 0.5rem;
-        }
-
-        .chat-msg {
-            max-width: 80%;
-            padding: 0.8rem 1rem;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-
-        .msg-user {
-            align-self: flex-end;
-            background: linear-gradient(135deg, var(--primary), #a855f7);
-            color: white;
-            border-bottom-right-radius: 2px;
-        }
-
-        .msg-agent {
-            align-self: flex-start;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            border-bottom-left-radius: 2px;
-        }
-
-        .chat-input-row {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .chat-input {
-            flex-grow: 1;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            padding: 0.8rem 1rem;
-            color: white;
-            font-family: inherit;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .chat-input:focus {
-            border-color: var(--primary);
-        }
-
-        .chat-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0 1.5rem;
-            font-family: inherit;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-        }
-
-        .chat-btn:hover {
-            background: #7c3aed;
-        }
-        
-        .chat-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* Event Styles */
-        .event-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            max-height: 600px;
-            overflow-y: auto;
-        }
-
-        .event-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.2s;
-        }
-
-        .event-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .event-time {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-
-        .event-type {
-            font-weight: 600;
-            color: #e2e8f0;
-        }
-
-        /* Scrollbar styles */
+        /* Custom elegant scrollbar */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
+            background: transparent;
         }
         ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
+            background: #e5e7eb;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
-
-        @media (max-width: 900px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
+            background: #d1d5db;
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen p-6 md:p-12">
 
-    <header>
-        <h1>Agent MCP Dashboard</h1>
+    <header class="max-w-7xl mx-auto mb-10 border-b border-gray-200 pb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-semibold tracking-tight text-[#111111]">Agent Dashboard</h1>
+            <p class="text-sm text-gray-500 mt-1">Model Context Protocol • Local File Storage</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="text-sm font-medium text-gray-500">System Status</span>
+            <div class="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-full shadow-sm">
+                <span class="relative flex h-2.5 w-2.5">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                </span>
+                <span id="status-text" class="text-sm font-semibold text-gray-800 uppercase tracking-wide">Loading...</span>
+            </div>
+        </div>
     </header>
 
-    <div class="container">
-        
-        <!-- LEFT COLUMN: Status & Chat -->
-        <div class="left-col">
-            <div class="glass-panel" id="status-panel">
-                <h2>Current Status</h2>
-                <div class="status-badge" id="status-display">
-                    <div class="status-dot"></div>
-                    <span id="status-text">Loading...</span>
-                </div>
-                <p style="color: var(--text-muted); margin-top: 1.5rem; line-height: 1.6;">
-                    The Agent MCP is currently running. Storage is set to a <strong>local temp JSON file</strong>.
-                </p>
-            </div>
+    <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-            <div class="glass-panel" style="flex-grow: 1;">
-                <h2>Agent Chat</h2>
-                <div class="chat-box" id="chat-box">
-                    <div class="chat-msg msg-agent">Hello! I am your Dev Agent. You can send me commands or chat with me. Try sending "ping"!</div>
+        <!-- Left Column: Command Interface (Chat) -->
+        <div class="lg:col-span-7 flex flex-col h-[650px]">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-full overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+                    <h2 class="text-xs font-bold tracking-widest text-gray-500 uppercase">Command Interface</h2>
+                    <button id="clear-btn" class="text-xs text-gray-400 hover:text-gray-700 font-medium transition-colors">Clear chat</button>
                 </div>
-                <div class="chat-input-row">
-                    <input type="text" id="chat-input" class="chat-input" placeholder="Message the agent..." autocomplete="off">
-                    <button id="chat-btn" class="chat-btn">Send</button>
+
+                <!-- Provider settings -->
+                <div class="px-6 py-3 border-b border-gray-100 grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <select id="provider-select" class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-xs text-[#111111] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:bg-white">
+                        <option>Loading providers...</option>
+                    </select>
+                    <input type="text" id="model-input" class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-xs font-mono focus:outline-none focus:ring-2 focus:ring-gray-200 focus:bg-white" placeholder="Model (default)" autocomplete="off">
+                    <input type="password" id="key-input" class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-xs font-mono focus:outline-none focus:ring-2 focus:ring-gray-200 focus:bg-white disabled:opacity-50" placeholder="API key" autocomplete="off">
+                </div>
+
+                <div id="chat-box" class="flex-grow p-6 overflow-y-auto flex flex-col gap-4">
+                    <div class="self-start bg-gray-50 border border-gray-100 text-gray-800 rounded-lg rounded-tl-none px-4 py-3 text-sm max-w-[85%] shadow-sm">
+                        System initialized. Pick a provider, add an API key (or use the one in .env), and send a message.
+                    </div>
+                </div>
+
+                <div class="p-4 border-t border-gray-100 bg-white">
+                    <div class="relative flex items-center">
+                        <span class="absolute left-4 text-gray-400 text-sm font-mono font-bold">&gt;</span>
+                        <input type="text" id="chat-input" class="w-full pl-9 pr-24 py-3.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-[#111111] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:bg-white transition-all font-mono" placeholder="Enter command..." autocomplete="off">
+                        <button id="chat-btn" class="absolute right-2 px-5 py-2 bg-[#111111] hover:bg-gray-800 text-white text-sm font-medium rounded-md transition-colors shadow-sm disabled:opacity-50">
+                            Execute
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- RIGHT COLUMN: Events -->
-        <div class="glass-panel" style="height: fit-content;">
-            <h2>Recent Events</h2>
-            <ul class="event-list" id="events-list">
-                <!-- Events injected via JS -->
-            </ul>
+        <!-- Right Column: Event Log -->
+        <div class="lg:col-span-5 flex flex-col h-[650px]">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-full overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+                    <h2 class="text-xs font-bold tracking-widest text-gray-500 uppercase">Event Log</h2>
+                    <span class="text-xs text-gray-400 font-mono bg-white px-2 py-1 rounded border border-gray-200 shadow-sm">storage/temp/data.json</span>
+                </div>
+
+                <ul id="events-list" class="flex-grow overflow-y-auto p-4 flex flex-col gap-3">
+                    <!-- Events injected via JS -->
+                </ul>
+            </div>
         </div>
-    </div>
+
+    </main>
 
     <script>
+        // Escape text before putting it into innerHTML (chat text ends up in the event log)
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
         async function fetchStatus() {
             try {
                 const res = await fetch('/api/status');
@@ -316,24 +135,22 @@
                 // Reverse so newest is first
                 events.reverse().forEach(event => {
                     const li = document.createElement('li');
-                    li.className = 'event-item';
-                    
+                    li.className = 'bg-gray-50 border border-gray-100 rounded-lg p-4 flex flex-col gap-2 transition-colors hover:bg-gray-100/50';
+
                     const date = new Date(event.timestamp);
                     const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
                     let payloadStr = '';
                     if (event.payload) {
-                        payloadStr = JSON.stringify(event.payload);
+                        payloadStr = JSON.stringify(event.payload, null, 2);
                     }
 
                     li.innerHTML = `
-                        <div>
-                            <div class="event-type">${event.type}</div>
-                            <div class="event-payload" style="font-size: 0.85rem; color: #cbd5e1; margin-top: 0.25rem;">
-                                ${payloadStr}
-                            </div>
+                        <div class="flex justify-between items-start w-full">
+                            <span class="font-semibold text-sm text-[#111111]">${escapeHtml(event.type)}</span>
+                            <span class="text-xs text-gray-400 font-mono">${timeString}</span>
                         </div>
-                        <div class="event-time">${timeString}</div>
+                        ${payloadStr ? `<pre class="text-xs text-gray-500 font-mono bg-white p-2 rounded border border-gray-100 overflow-x-auto">${escapeHtml(payloadStr)}</pre>` : ''}
                     `;
                     list.appendChild(li);
                 });
@@ -342,55 +159,159 @@
             }
         }
 
-        // --- Chat Logic ---
+        // --- Provider settings ---
+        const providerSel = document.getElementById('provider-select');
+        const modelInput = document.getElementById('model-input');
+        const keyInput = document.getElementById('key-input');
+        let providers = [];
+
+        function currentProvider() {
+            return providers.find(p => p.id === providerSel.value);
+        }
+
+        function applyProvider() {
+            const p = currentProvider();
+            if (!p) return;
+            modelInput.placeholder = p.default_model;
+            modelInput.value = localStorage.getItem('model:' + p.id) || '';
+            // API keys live in sessionStorage only: cleared when the tab closes
+            keyInput.value = sessionStorage.getItem('apikey:' + p.id) || '';
+            keyInput.disabled = !p.needs_key;
+            keyInput.placeholder = !p.needs_key
+                ? 'No key needed'
+                : p.key_in_env ? 'API key (blank = use server .env)' : 'API key';
+        }
+
+        async function loadProviders() {
+            try {
+                const res = await fetch('/api/providers');
+                providers = await res.json();
+                providerSel.innerHTML = providers
+                    .map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}${p.key_in_env ? ' ✓' : ''}</option>`)
+                    .join('');
+                const saved = localStorage.getItem('provider');
+                if (saved && providers.some(p => p.id === saved)) providerSel.value = saved;
+                applyProvider();
+            } catch (err) {
+                console.error(err);
+                providerSel.innerHTML = '<option>Failed to load providers</option>';
+            }
+        }
+
+        providerSel.addEventListener('change', () => {
+            localStorage.setItem('provider', providerSel.value);
+            applyProvider();
+        });
+        modelInput.addEventListener('input', () => {
+            localStorage.setItem('model:' + providerSel.value, modelInput.value.trim());
+        });
+        keyInput.addEventListener('input', () => {
+            sessionStorage.setItem('apikey:' + providerSel.value, keyInput.value.trim());
+        });
+
+        // --- Chat/Command Logic ---
         const chatInput = document.getElementById('chat-input');
         const chatBtn = document.getElementById('chat-btn');
         const chatBox = document.getElementById('chat-box');
+        const clearBtn = document.getElementById('clear-btn');
+        const history = []; // [{role: 'user'|'assistant', content}]
 
-        function appendMessage(text, isUser) {
+        function appendMessage(text, isUser, isError = false) {
             const msg = document.createElement('div');
-            msg.className = 'chat-msg ' + (isUser ? 'msg-user' : 'msg-agent');
+
+            if (isUser) {
+                msg.className = 'self-end bg-[#111111] text-white rounded-lg rounded-tr-none px-4 py-3 text-sm max-w-[85%] shadow-sm whitespace-pre-wrap';
+            } else if (isError) {
+                msg.className = 'self-start bg-red-50 border border-red-100 text-red-700 rounded-lg rounded-tl-none px-4 py-3 text-sm max-w-[85%] shadow-sm whitespace-pre-wrap';
+            } else {
+                msg.className = 'self-start bg-gray-50 border border-gray-100 text-gray-800 rounded-lg rounded-tl-none px-4 py-3 text-sm max-w-[85%] shadow-sm whitespace-pre-wrap';
+            }
+
             msg.innerText = text;
             chatBox.appendChild(msg);
             chatBox.scrollTop = chatBox.scrollHeight;
+            return msg;
+        }
+
+        async function typeWriter(element, text, speed = 15) {
+            element.innerText = '';
+            let i = 0;
+            return new Promise((resolve) => {
+                function type() {
+                    if (i < text.length) {
+                        element.innerText += text.charAt(i);
+                        i++;
+                        chatBox.scrollTop = chatBox.scrollHeight;
+                        setTimeout(type, speed);
+                    } else {
+                        resolve();
+                    }
+                }
+                type();
+            });
+        }
+
+        function setBusy(busy) {
+            chatBtn.disabled = busy;
+            chatInput.disabled = busy;
+            chatBtn.innerText = busy ? '...' : 'Execute';
+            if (!busy) chatInput.focus();
         }
 
         async function sendMessage() {
             const text = chatInput.value.trim();
             if (!text) return;
 
-            // 1. Show user message
             appendMessage(text, true);
             chatInput.value = '';
+            setBusy(true);
+            const thinking = appendMessage('Thinking...', false);
 
             try {
-                // 2. Send to backend
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: text })
+                    body: JSON.stringify({
+                        provider: providerSel.value,
+                        model: modelInput.value.trim(),   // empty = provider default
+                        api_key: keyInput.value.trim(),   // empty = server .env
+                        message: text,
+                        history: history
+                    })
                 });
                 const data = await res.json();
-                
-                // 3. Show agent reply
-                if (data.reply) {
-                    appendMessage(data.reply, false);
+                thinking.remove();
+
+                if (!res.ok) {
+                    appendMessage(data.error || ('Request failed (' + res.status + ')'), false, true);
+                } else if (data.reply) {
+                    const msgEl = appendMessage('', false);
+                    await typeWriter(msgEl, data.reply);
+                    history.push({ role: 'user', content: text });
+                    history.push({ role: 'assistant', content: data.reply });
                 }
-            } catch(err) {
-                appendMessage("Error: Could not reach agent backend.", false);
+            } catch (err) {
+                thinking.remove();
+                appendMessage('Could not reach agent backend.', false, true);
             }
-            
-            // Immediately fetch events to show the chat event log
+
+            setBusy(false);
             fetchEvents();
         }
+
+        clearBtn.addEventListener('click', () => {
+            history.length = 0;
+            chatBox.innerHTML = '';
+            appendMessage('Chat cleared.', false);
+        });
 
         chatBtn.addEventListener('click', sendMessage);
         chatInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
         });
 
-
         // Initial fetch
+        loadProviders();
         fetchStatus();
         fetchEvents();
 

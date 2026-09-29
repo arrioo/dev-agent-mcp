@@ -8,6 +8,7 @@
 # Compiled binaries
 dashboard.exe
 dev-agent-mcp.exe
+mcp-server.exe
 
 # =========================
 # Build Output
